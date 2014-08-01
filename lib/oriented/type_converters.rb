@@ -18,6 +18,10 @@ module Oriented
         def index_as
           String
         end
+        
+        def o_type
+          nil
+        end
       end
     end
 
@@ -41,6 +45,10 @@ module Oriented
 
         def index_as
           String
+        end
+        
+        def o_type
+          OrientDB::SchemaType::BOOLEAN
         end
       end
 
@@ -66,7 +74,10 @@ module Oriented
         def index_as
           String
         end
-
+        
+        def o_type
+          OrientDB::SchemaType::STRING
+        end
       end
     end
 
@@ -92,6 +103,9 @@ module Oriented
           String
         end
 
+        def o_type
+          OrientDB::SchemaType::STRING
+        end
       end
     end
 
@@ -116,6 +130,9 @@ module Oriented
           Fixnum
         end
 
+        def o_type
+          OrientDB::SchemaType::LONG
+        end
       end
     end
 
@@ -140,6 +157,9 @@ module Oriented
           Float
         end
 
+        def o_type
+          OrientDB::SchemaType::FLOAT
+        end
       end
     end
 
@@ -170,6 +190,9 @@ module Oriented
           Fixnum
         end
 
+        def o_type
+          OrientDB::SchemaType::DATE
+        end
       end
     end
 
@@ -204,6 +227,9 @@ module Oriented
           Fixnum
         end
 
+        def o_type
+          OrientDB::SchemaType::DATETIME
+        end
       end
     end
 
@@ -236,6 +262,9 @@ module Oriented
           Fixnum
         end
 
+        def o_type
+          OrientDB::SchemaType::DATETIME
+        end
       end
     end
 
@@ -256,6 +285,10 @@ module Oriented
 
         def index_as
           Set 
+        end
+        
+        def o_type
+          OrientDB::SchemaType::EMBEDDEDSET
         end
       end
     end
@@ -279,6 +312,10 @@ module Oriented
         def index_as
           Hash 
         end
+        
+        def o_type
+          OrientDB::SchemaType::EMBEDDEDMAP
+        end
       end
     end
 
@@ -296,12 +333,12 @@ module Oriented
       def converter(type = nil, enforce_type = true)
         return DefaultConverter unless type
         @converters ||= begin
-                          Oriented::TypeConverters.constants.find_all do |c|
-                            Oriented::TypeConverters.const_get(c).respond_to?(:convert?)
-                          end.map do  |c|
-                            Oriented::TypeConverters.const_get(c)
-                          end
-                        end
+          Oriented::TypeConverters.constants.find_all do |c|
+            Oriented::TypeConverters.const_get(c).respond_to?(:convert?)
+          end.map do  |c|
+            Oriented::TypeConverters.const_get(c)
+          end
+        end
         found = @converters.find {|c| c.convert?(type) }
         raise "The type #{type.inspect} is unknown. Use one of #{@converters.map{|c| c.name }.join(", ")} or create a custom type converter." if !found && enforce_type
         found or DefaultConverter

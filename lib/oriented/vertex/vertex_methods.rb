@@ -23,6 +23,7 @@ module Oriented
                   
         java_obj = Oriented::Core::JavaVertex.new(mergeprops, "#{Oriented::Registry.odb_class_for(self.name.to_s)}")        
         wrapper.__java_obj = java_obj
+        
         # wrapper.write_default_values
         # props.each_pair {|attr,val| wrapper.public_send("#{attr}=", val)} if props       
         wrapper
