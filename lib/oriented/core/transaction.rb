@@ -19,18 +19,9 @@ module Oriented
         connection.commit if options.fetch(:commit_on_success, false) == true
         ret
       rescue => ex
-        Oriented.close_connection
-        puts "rescue att 1 e = #{ex}"
-        # Rails.logger.info("first attempt = #{ex}")        
-        begin
-          connection = Oriented.connection
-          connection.connect
-          ret = yield
-        rescue Exception=>e
-          connection.rollback
-          # Rails.logger.info("second attempt = #{e}")
-          raise
-        end
+        connection.rollback
+        puts "Rollback = #{ex}"
+        raise
       ensure
         
       end
