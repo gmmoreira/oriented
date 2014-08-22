@@ -9,7 +9,9 @@ module Oriented
         @rel_type = rel_type
         @rel_class = Oriented::BaseEdge
         clname = Oriented::Registry.ruby_class_for(rel_type.label)
-        if clname
+        if rel_type.relationship_class
+           @rel_class = rel_type.relationship_class
+        elsif clname
           clname = clname[0].upcase + clname[1..-1]
           @rel_class = to_class(clname) if (Kernel.const_defined?(clname) || Object.const_defined?(clname))
         end

@@ -44,7 +44,7 @@ module Oriented
       end
 
       def relationship_class
-        @relationship_class ||= Oriented::Core::JavaEdge 
+        @relationship_class
       end
 
       def target_class
