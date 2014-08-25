@@ -2,6 +2,7 @@ module Oriented
   module Relationships
     class EdgesInstance
       include Enumerable
+      include Oriented::Core::ToClass
       extend Oriented::Core::TransactionWrapper
 
       def initialize(vertex, rel_type)
@@ -13,13 +14,10 @@ module Oriented
            @rel_class = rel_type.relationship_class
         elsif clname
           clname = clname[0].upcase + clname[1..-1]
-          @rel_class = to_class(clname) if (Kernel.const_defined?(clname) || Object.const_defined?(clname))
+          klass = to_class(clname)
+          @rel_class = klass if klass
         end
-      end  
-      
-      def to_class(class_name)
-        class_name.split("::").inject(Kernel) { |container, name| container.const_get(name.to_s) }
-      end      
+      end
 
       def each
         edge_query.each do |v|

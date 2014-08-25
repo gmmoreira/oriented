@@ -1,4 +1,5 @@
 require_relative "to_java"
+require_relative "to_class"
 require_relative "transaction"
 require_relative "wrapper/class_methods"
 require_relative "wrapper/wrapper"
