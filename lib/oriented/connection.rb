@@ -2,9 +2,9 @@ require 'singleton'
 module Oriented
   class << self
     def connection
-      @connection ||= Connection.new
-      @connection.connect
-      @connection
+      connection = Thread.current[:graph_connection] ||= Connection.new
+      connection.connect
+      connection
     end
 
     def graph(stop_transaction = false)
@@ -12,8 +12,9 @@ module Oriented
     end
 
     def close_connection(force=false)
-      @connection.close if @connection
-      @connection =nil
+      connection = Thread.current[:graph_connection]
+      connection.close if connection
+      Thread.current[:graph_connection] = nil
     end
 
     def register_hook_class(hook_class)
@@ -52,7 +53,6 @@ module Oriented
     include Singleton
 
     def initialize(options={})
-      puts "** initializng ORIENTDB ConnectionFactory"
       Java::ComOrientechnologiesOrientCoreConfig::OGlobalConfiguration::CACHE_LEVEL1_ENABLED.setValue(Oriented.configuration.enable_level1_cache||false)
       Java::ComOrientechnologiesOrientCoreConfig::OGlobalConfiguration::CACHE_LEVEL2_ENABLED.setValue(Oriented.configuration.enable_level2_cache||false)            
       Java::ComOrientechnologiesOrientCoreConfig::OGlobalConfiguration::NETWORK_BINARY_DNS_LOADBALANCING_ENABLED.setValue(Oriented.configuration.network_binary_dns_loadbalancing_enabled);
